@@ -12,12 +12,11 @@ dbase = declarative_base()
 class Users(dbase):
     __tablename__ = "users"
     
-    id = Column(Integer(), primary_key=True, autoincrement=True)
-    chat_id = Column(Integer(), nullable=False, unique=False)
+    chat_id = Column(Integer(), primary_key=True)
 
     mangas = relationship('Mangas')
     
-    
+
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
@@ -30,7 +29,7 @@ class Mangas(dbase):
     years = Column(String(), nullable=True, unique=False)
     state = Column(String(), nullable=True, unique=False)
     
-    chat_id = Column(Integer(), ForeignKey("users.id"))
+    chat_id = Column(Integer(), ForeignKey("users.chat_id"))
     
     mangas_genres = relationship('Mangas_genres')
     

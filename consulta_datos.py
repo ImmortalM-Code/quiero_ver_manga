@@ -24,5 +24,27 @@ def capitulos_nuevos(parametros, chat_id):
     session.close_all()
 
 
-def obtener_nuevos():
+def obtener_nuevos(chat_id):
+    session = models.iniciar_db()
+    chats = [i for i in session.query(models.Users)]
+    mangas = [i for i in session.query(models.Mangas)]
+    html_procesado = procesar_html.ultimas_publicaciones(page=1)
+    
+    nuevos = [i for i in html_procesado]
+    
+    registros = []
+    
+    for c in chats:
+        mangas = [i for i in session.query(models.Mangas).filter_by(chat_id=c.chat_id)]
+        for m in mangas:
+            for n in nuevos:
+                if n["titulo"] == m.title and c.chat_id == chat_id:
+                    registros.append(n)
+                    
+                    
+    session.close_all()
+    return registros
+
+
+def mangas_auto():
     pass

@@ -35,7 +35,8 @@ def procesar_manga(datos):
     base = datos.find("div", class_="col-12 col-md-9 element-header-content-text")
     generos_bruto = base.find_all("h6")
     titulo_completo = base.find("h1", class_="element-title my-2").get_text()
-    titulo = re.compile(r"[a-zA-Z].+").search(titulo_completo)[0]
+    #titulo = re.compile(r"[a-zA-Z].+").search(titulo_completo)[0]
+    titulo = base.find("h2", class_="element-subtitle").get_text()
     anio = re.compile(r"(?<=\( ).+(?= \))").search(titulo_completo)[0]
     estado = base.find("span", class_="book-status publishing").get_text()
     

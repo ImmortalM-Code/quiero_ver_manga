@@ -1,4 +1,4 @@
-import json
+import urllib.request
 import conectar
 import procesar_html
 import models as models
@@ -18,6 +18,7 @@ commandos = {
 
 def extract_arg(arg):
     return arg.split()[1:]
+
 
 @bot.message_handler(commands=["start"])
 def bienvenida(message):
@@ -46,31 +47,30 @@ def agregar_mangas(message):
     parametros = extract_arg(message.text)
     p = consulta_datos.capitulos_nuevos(parametros=parametros, chat_id=message.chat.id)
     bot.reply_to(message, f"Manga {p} agregado")
+    
+
+@bot.message_handler(commands=["nuevos_mangas", "newm"])
+def nuevos_mangas(message):
+    hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Referer': 'https://cssspritegenerator.com',
+            'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+            'Accept-Encoding': 'none',
+            'Accept-Language': 'en-US,en;q=0.8',
+            'Connection': 'keep-alive'}
+    registro = consulta_datos.obtener_nuevos(chat_id=message.chat.id)
+
+    for i in registro:
+        formato = f"""
+<b>{i["titulo"]}</b>
+{i["capitulo"]}
+{i["tipo"]}
+{i["scan"]}
+<a href="{i["url"]}">Ir al manga</a>
+        """
+        #bot.send_photo(message.chat.id, photo=i["imagen"])
+        bot.send_message(message.chat.id, formato, parse_mode="html", disable_web_page_preview=False)
         
 
 print("iniciando bot")
 bot.infinity_polling()
-#soup = conectar.ChargeWeb(url_web)
-
-#print(procesar_html.ultimas_publicaciones(page=1))
-
-#manejo_datos.guardar_manga(obtener_datos.procesar_manga(soup))
-
-#datos = obtener_datos.procesar_datos(soup)
-
-#datos = obtener_datos.obtener_capitulos(soup)
-
-#engine, dbase, session = db.iniciar_db()
-
-
-"""user = db.Users(name="Javier", number=959791603, number_code=56)
-session.add(user)
-session.commit()"""
-
-"""users = session.query(db.Users).all()
-for user in users:
-    print(user)"""
-
-"""
-with open("capitulos.json", "w") as file:
-    json.dump(datos, file, indent=4)"""
