@@ -13,16 +13,13 @@ class Users(dbase):
     __tablename__ = "users"
     
     id = Column(Integer(), primary_key=True, autoincrement=True)
-    name = Column(String(), nullable=False, unique=False)
-    token = Column(String(), nullable=False, unique=False)
+    chat_id = Column(Integer(), nullable=False, unique=False)
 
     mangas = relationship('Mangas')
     
     
-    def __init__(self, name, number, number_code):
-        self.name = name
-        self.number = number
-        self.number_code = number_code
+    def __init__(self, chat_id):
+        self.chat_id = chat_id
 
 
 class Mangas(dbase):
@@ -33,16 +30,16 @@ class Mangas(dbase):
     years = Column(String(), nullable=True, unique=False)
     state = Column(String(), nullable=True, unique=False)
     
-    users_id = Column(Integer(), ForeignKey("users.id"))
+    chat_id = Column(Integer(), ForeignKey("users.id"))
     
     mangas_genres = relationship('Mangas_genres')
     
     
-    def __init__(self, title, years, state, users_id):
+    def __init__(self, title, years, state, chat_id):
         self.title = title
         self.years = years
         self.state = state
-        self.users_id = users_id
+        self.chat_id = chat_id
     
 
 class Mangas_genres(dbase):
@@ -79,4 +76,5 @@ def iniciar_db():
     session = Session()
     dbase.metadata.create_all(engine)
     
-    return engine, dbase, session
+    #return engine, dbase, session
+    return session

@@ -1,15 +1,59 @@
 import json
 import conectar
 import procesar_html
-import db as db
+import models as models
 import manejo_datos
+import consulta_datos
+import telebot
+from config import TELEGRAM_TOKEN
+
+bot = telebot.TeleBot(TELEGRAM_TOKEN)
+
+commandos = {
+    "agregar_mangas" : "Agregar mangas de interes con una url de tmo",
+    "buscar_mangas" : "buscar tus mangas de interes guardados en el registro",
+    "nuevos_mangas" : "busca las nuevas publicaciones de mangas que coincidan con tus mangas de interes",
+    "help" : "muestra todos lo comandos disponibles"
+}
+
+def extract_arg(arg):
+    return arg.split()[1:]
+
+@bot.message_handler(commands=["start"])
+def bienvenida(message):
+    mensaje = """
+    Bienvenido a MangasUWU\n
+    Para iniciar a recibir notificaciones
+    sobre las ultimos capitulos de tu mangas de interes
+    tienes que agregar mangas al registro
+    con el comando /agregarmangas.
+    
+    usa el comando /help para mas comandos
+    """
+    bot.reply_to(message, mensaje)
 
 
-url_web = "https://lectortmo.com/latest_uploads?page=1&uploads_mode=thumbnail"
+@bot.message_handler(commands=["help"])
+def ayuda(message):
+    ayudas = ""
+    for k in commandos:
+        ayudas+= f"/{k} : {commandos[k]}\n"
+    bot.reply_to(message, ayudas)
 
+
+@bot.message_handler(commands=["agregar_mangas"])
+def agregar_mangas(message):
+    session = models.iniciar_db()
+    parametros = extract_arg(message.text)
+    p = consulta_datos.capitulos_nuevos(parametros=parametros, chat_id=message.chat.id)
+    bot.reply_to(message, f"Manga {p} agregado")
+        
+
+print("iniciando bot")
+bot.infinity_polling()
 #soup = conectar.ChargeWeb(url_web)
 
-print(procesar_html.ultimas_publicaciones(page=1))
+#print(procesar_html.ultimas_publicaciones(page=1))
 
 #manejo_datos.guardar_manga(obtener_datos.procesar_manga(soup))
 
