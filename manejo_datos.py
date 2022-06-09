@@ -4,9 +4,8 @@ import models as models
 
 
 
-def guardar_manga(datos : dict, chat_id):
+def guardar_manga(datos : dict, chat_id, session):
     
-    session = models.iniciar_db()
     #session = db.iniciar_db()
     # Verificar y agregar el manga a la base de datos
     verify_manga = [i.title for i in session.query(models.Mangas).filter_by(title=datos["titulo"][0])]
@@ -14,7 +13,6 @@ def guardar_manga(datos : dict, chat_id):
         mangas = models.Mangas(title=datos["titulo"][0], years=datos["año"][0], state=datos["estado"][0], chat_id=chat_id)
         session.add(mangas)
         session.commit()
-        print("guardando manga")
     
     # verificar repetidos y guardar generos en la base de datos
     recive_genre = [i for i in datos["generos"][0]]
@@ -60,3 +58,5 @@ def guardar_manga(datos : dict, chat_id):
             mangas_genres = models.Mangas_genres(mangas_id=manga_id, genres_id=genre_id)
             session.add(mangas_genres)
             session.commit()
+    
+    session.close_all()

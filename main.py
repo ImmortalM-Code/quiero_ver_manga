@@ -10,10 +10,10 @@ from config import TELEGRAM_TOKEN
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 
 commandos = {
-    "agregar_mangas" : "Agregar mangas de interes con una url de tmo",
-    "buscar_mangas" : "buscar tus mangas de interes guardados en el registro",
-    "nuevos_mangas" : "busca las nuevas publicaciones de mangas que coincidan con tus mangas de interes",
-    "help" : "muestra todos lo comandos disponibles"
+    "agregar_mangas" : "o /addm. Agrega mangas de interes con una url de tmo y si el manga existe actualiza los generos",
+    "buscar_mangas" : "o /seam. buscar tus mangas de interes guardados en el registro",
+    "nuevos_mangas" : "o /newm. busca las nuevas publicaciones de mangas que coincidan con tus mangas de interes",
+    "help" : "o /h. muestra todos lo comandos disponibles"
 }
 
 def extract_arg(arg):
@@ -33,7 +33,7 @@ def bienvenida(message):
     bot.reply_to(message, mensaje)
 
 
-@bot.message_handler(commands=["help"])
+@bot.message_handler(commands=["help", "h"])
 def ayuda(message):
     ayudas = ""
     for k in commandos:
@@ -41,9 +41,8 @@ def ayuda(message):
     bot.reply_to(message, ayudas)
 
 
-@bot.message_handler(commands=["agregar_mangas"])
+@bot.message_handler(commands=["agregar_mangas", "addm"])
 def agregar_mangas(message):
-    session = models.iniciar_db()
     parametros = extract_arg(message.text)
     p = consulta_datos.capitulos_nuevos(parametros=parametros, chat_id=message.chat.id)
     bot.reply_to(message, f"Manga {p} agregado")

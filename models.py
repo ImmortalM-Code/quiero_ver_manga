@@ -75,6 +75,5 @@ def iniciar_db():
     Session = sessionmaker(engine)
     session = Session()
     dbase.metadata.create_all(engine)
-    
     #return engine, dbase, session
     return session
