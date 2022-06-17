@@ -1,8 +1,12 @@
+import subprocess
+import requests
+import urllib.request
 import models
 import conectar
 import manejo_datos
 import procesar_html
 import models
+import conectar
 
 def agregar_mangas(parametros, chat_id):
     session = models.iniciar_db()
@@ -66,8 +70,7 @@ def mangas_auto():
                 if i["hora"].strip().strip(" h") == "0":
                     i['chat_id'] = j.chat_id
                     registro.append(i)
-
+                    
+    
     session.close()
     return registro
-
-mangas_auto()

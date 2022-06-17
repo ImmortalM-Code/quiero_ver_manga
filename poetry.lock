@@ -101,6 +101,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "scheduler"
+version = "0.7.4"
+description = "A simple in-process python scheduler library with asyncio, threading and timezone support. Use datetime standard library objects for planning of Jobs depending on time cycles, fixed times, weekdays, dates, weights, offsets and execution counts."
+category = "main"
+optional = false
+python-versions = ">=3.9"
+
+[package.dependencies]
+typeguard = ">=2.6.0"
+
+[[package]]
 name = "soupsieve"
 version = "2.3.2.post1"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -141,6 +152,18 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "typeguard"
+version = "2.13.3"
+description = "Run-time type checker for Python"
+category = "main"
+optional = false
+python-versions = ">=3.5.3"
+
+[package.extras]
+doc = ["sphinx-rtd-theme", "sphinx-autodoc-typehints (>=1.2.0)"]
+test = ["pytest", "typing-extensions", "mypy"]
+
+[[package]]
 name = "urllib3"
 version = "1.26.9"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -156,7 +179,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "075e57a633e05df3b3fba41c194201ee8ec0638928327a9347beb9b5169d0a69"
+content-hash = "6b565ccd0cb7e8701673ef30f255976015298afd248e08e41cf3f997662e3f83"
 
 [metadata.files]
 beautifulsoup4 = [
@@ -302,6 +325,10 @@ requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
+scheduler = [
+    {file = "scheduler-0.7.4-py3-none-any.whl", hash = "sha256:b7689871bb0b244c35d554ac2d089e35a94c92d7dae116c1a5419284b89eb270"},
+    {file = "scheduler-0.7.4.tar.gz", hash = "sha256:283f23957b309a1216fbf68a8cc01ee84b7b9155bd2602cfba3c71c10c296c94"},
+]
 soupsieve = [
     {file = "soupsieve-2.3.2.post1-py3-none-any.whl", hash = "sha256:3b2503d3c7084a42b1ebd08116e5f81aadfaea95863628c80a3b774a11b7c759"},
     {file = "soupsieve-2.3.2.post1.tar.gz", hash = "sha256:fc53893b3da2c33de295667a0e19f078c14bf86544af307354de5fcf12a3f30d"},
@@ -342,6 +369,10 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.37-cp39-cp39-win32.whl", hash = "sha256:5e4e517ce72fad35cce364a01aff165f524449e9c959f1837dc71088afa2824c"},
     {file = "SQLAlchemy-1.4.37-cp39-cp39-win_amd64.whl", hash = "sha256:c37885f83b59e248bebe2b35beabfbea398cb40960cdc6d3a76eac863d4e1938"},
     {file = "SQLAlchemy-1.4.37.tar.gz", hash = "sha256:3688f92c62db6c5df268e2264891078f17ecb91e3141b400f2e28d0f75796dea"},
+]
+typeguard = [
+    {file = "typeguard-2.13.3-py3-none-any.whl", hash = "sha256:5e3e3be01e887e7eafae5af63d1f36c849aaa94e3a0112097312aabfa16284f1"},
+    {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.9-py2.py3-none-any.whl", hash = "sha256:44ece4d53fb1706f667c9bd1c648f5469a2ec925fcf3a776667042d645472c14"},
