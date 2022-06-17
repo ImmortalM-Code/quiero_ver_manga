@@ -4,10 +4,10 @@ import manejo_datos
 import procesar_html
 import models
 
-def capitulos_nuevos(parametros, chat_id):
+def agregar_mangas(parametros, chat_id):
     session = models.iniciar_db()
     verify_chat = [i.chat_id for i in session.query(models.Users).filter_by(chat_id=chat_id)]
-    print(len(verify_chat))
+    
     if len(verify_chat) == 0:
         chat = models.Users(chat_id)
         session.add(chat)
@@ -15,13 +15,19 @@ def capitulos_nuevos(parametros, chat_id):
         verify_chat = [i.chat_id for i in session.query(models.Users).filter_by(chat_id=chat_id)]
     
     if len(verify_chat) != 0:
+        nombres = []
         for p in parametros:
             soup = conectar.ChargeWeb(p)
             html_procesado = procesar_html.procesar_manga(soup)
-            manejo_datos.guardar_manga(html_procesado, chat_id, session=session)
-            return html_procesado["titulo"]
-    
-    session.close_all()
+            g = manejo_datos.guardar_manga(html_procesado, chat_id, session=session)
+            if g:
+                nombres.append("ya existe, y si fuera el caso los generos se actualizaran.")
+            else:
+                n = f'{html_procesado["titulo"]} fue agregado'
+                nombres.append(n)
+        return nombres
+
+    session.close()
 
 
 def obtener_nuevos(chat_id):
@@ -42,9 +48,26 @@ def obtener_nuevos(chat_id):
                     registros.append(n)
                     
                     
-    session.close_all()
+    session.close()
     return registros
 
 
 def mangas_auto():
-    pass
+    session = models.iniciar_db()
+    mangas_db = [i for i in session.query(models.Mangas)]
+    
+    nuevos = procesar_html.ultimas_publicaciones(page=1)
+    
+    registro = []
+    
+    for i in nuevos:
+        for j in mangas_db:
+            if i['titulo'] == j.title:
+                if i["hora"].strip().strip(" h") == "0":
+                    i['chat_id'] = j.chat_id
+                    registro.append(i)
+
+    session.close()
+    return registro
+
+mangas_auto()

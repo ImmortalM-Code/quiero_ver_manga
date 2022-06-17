@@ -34,11 +34,20 @@ def procesar_manga(datos):
     # Datos de el encabezado
     base = datos.find("div", class_="col-12 col-md-9 element-header-content-text")
     generos_bruto = base.find_all("h6")
-    titulo_completo = base.find("h1", class_="element-title my-2").get_text()
-    #titulo = re.compile(r"[a-zA-Z].+").search(titulo_completo)[0]
+    #titulo_completo = base.find("h1", class_="element-title my-2").get_text()      respaldo
+    #titulo = re.compile(r"[a-zA-Z].+").search(titulo_completo)[0]                  respaldo
     titulo = base.find("h2", class_="element-subtitle").get_text()
-    anio = re.compile(r"(?<=\( ).+(?= \))").search(titulo_completo)[0]
-    estado = base.find("span", class_="book-status publishing").get_text()
+    html_anio = base.find("h1", class_="element-title my-2").find("small")
+    anio = ""
+    
+    if html_anio != None:
+        anio = re.compile(r"(?<=\( ).+(?= \))").search(html_anio.get_text())[0]
+    else:
+        anio = "Sin Año"
+    
+    estado_ex = re.compile(r'book-status.+(?=">[A-Z])').search(str(base))[0]
+    estado = base.find("span", class_=estado_ex).get_text()
+    # print(titulo_completo, html_anio, anio)
     
     generos = []
     for g in generos_bruto:
@@ -85,7 +94,8 @@ def ultimas_publicaciones(datos=None, page=1):
             "tipo" : c.a.div.span.get_text(),
             "imagen" : img_prosesada(c.find("div", class_=f"thumbnail upload upload-thumbnail-{pag+i}").find(f"style")),
             "url" : c.a['href'],
-            "scan" : c.find("span", class_="groups").get_text()
+            "scan" : c.find("span", class_="groups").get_text(),
+            "hora" : c.find("div", class_="upload_time badge").get_text()
         })
     
     return ultimos_caps

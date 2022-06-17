@@ -20,5 +20,5 @@ def ChargeWeb(url):
 
     plain_text = req.urlopen(source_code, timeout=20).read()
     soup = BeautifulSoup(plain_text, features="lxml")
-        
+
     return soup

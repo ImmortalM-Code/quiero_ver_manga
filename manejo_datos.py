@@ -54,9 +54,14 @@ def guardar_manga(datos : dict, chat_id, session):
     if len(verify_mangas_g) != 0:
         for g in verify_mangas_g:
             genre_id = [i.id for i in genre if i.genre == g][0]
-            print(genre_id, g)
+            #print(genre_id, g)
             mangas_genres = models.Mangas_genres(mangas_id=manga_id, genres_id=genre_id)
             session.add(mangas_genres)
             session.commit()
     
-    session.close_all()
+    session.close()
+    
+    if len(verify_manga) != 0:
+        return True
+    else:
+        return False
