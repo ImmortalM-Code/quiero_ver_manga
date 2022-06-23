@@ -7,8 +7,6 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 ADD . /app
 RUN cd app && ~/.poetry/bin/poetry install
 
-
-
 WORKDIR /app
 
 CMD .venv/bin/python /app/main.py
