@@ -1,6 +1,4 @@
-import conectar
-import procesar_html
-import models as models
+import db_models.models as models
 
 
 

@@ -10,8 +10,8 @@ requests = "^2.27.1"
 beautifulsoup4 = "^4.11.1"
 lxml = "^4.8.0"
 SQLAlchemy = "^1.4.37"
-pyTelegramBotAPI = "^4.5.1"
 scheduler = "^0.7.4"
+python-telegram-bot = "^13.12"
 
 [tool.poetry.dev-dependencies]
 

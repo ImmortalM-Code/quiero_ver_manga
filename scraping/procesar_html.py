@@ -1,6 +1,6 @@
 import bs4
 import re
-import conectar
+import scraping.conectar as conectar
 
 def obtener_capitulos(datos):
     base = datos.find("div", id="chapters")
@@ -34,7 +34,6 @@ def procesar_manga(datos):
     # Datos de el encabezado
     base = datos.find("div", class_="col-12 col-md-9 element-header-content-text")
     generos_bruto = base.find_all("h6")
-    #titulo_completo = base.find("h1", class_="element-title my-2").get_text()      respaldo
     #titulo = re.compile(r"[a-zA-Z].+").search(titulo_completo)[0]                  respaldo
     titulo = base.find("h2", class_="element-subtitle").get_text()
     html_anio = base.find("h1", class_="element-title my-2").find("small")
@@ -47,7 +46,6 @@ def procesar_manga(datos):
     
     estado_ex = re.compile(r'book-status.+(?=">[A-Z])').search(str(base))[0]
     estado = base.find("span", class_=estado_ex).get_text()
-    # print(titulo_completo, html_anio, anio)
     
     generos = []
     for g in generos_bruto:
