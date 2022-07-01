@@ -1,16 +1,14 @@
-#from scheduler import Scheduler
-from calendar import c
-import sys
-from turtle import up
+from datetime import datetime
 from telegram.ext import Updater, CommandHandler, CallbackContext
+import sys
 import time
-import datetime as dt
 import telegram
 import controllers.consulta_datos as consulta_datos
 import mensajes as mj
 import logging
 import os
 import telegram
+import threading
 
 
 # Logging
@@ -19,17 +17,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 # Variables de entorno
-TOKEN=os.getenv("TOKEN")
+TOKEN = os.getenv("TOKEN")
 mode = os.getenv("MODO")
 # Telegram 
 bot = telegram.Bot(token=TOKEN)
 updater = Updater(bot.token)
 dp = updater.dispatcher
 # Jobs
-jobs = updater.job_queue
+#jobs = updater.job_queue
 # Commands
 comandos = mj.COMANDOS
-#schedule = Scheduler()
 
 
 if mode == "dev":
@@ -106,7 +103,8 @@ def nuevos_mangas(update, context):
     logger.info(f"Solicitud /newm Finalizada.")
 
 
-def notificacion_auto(context: CallbackContext):
+#def notificacion_auto(context: CallbackContext):
+def notificacion_auto():
     logger.info(f"Envio automatico de notificacion de mangas")
     registro = consulta_datos.mangas_auto(logger=logger)
     registro.reverse()
@@ -119,26 +117,43 @@ def notificacion_auto(context: CallbackContext):
                 consulta_datos.descargar_img(inx, i, logger)
             
                 with open(f"img_tmp/{inx}.jpeg", "rb") as imagenfile:
-                    context.bot.sendPhoto(chat_id=i["chat_id"], photo=imagenfile)
+                    #context.bot.sendPhoto(chat_id=i["chat_id"], photo=imagenfile)
+                    updater.bot.sendPhoto(chat_id=i["chat_id"], photo=imagenfile)
 
                 once_down.append(i["titulo"])
                     
             mensaje = mj.NUEVAS_PUBLICACIONES % (i["titulo"], i["capitulo"], i["tipo"], i["scan"], i["url"])
             
-            context.bot.sendMessage(chat_id=i["chat_id"], parse_mode="HTML", text=mensaje)
-            
+            #context.bot.sendMessage(chat_id=i["chat_id"], parse_mode="HTML", text=mensaje)
+            updater.bot.sendMessage(chat_id=i["chat_id"], parse_mode="HTML", text=mensaje)
+        logger.info(f"Envio automatico finalizado")
     else:
         time.sleep(1)
-            
 
+
+def start_jobs():
+    logger.info("Tarea iniciada")
+    tiempo_anterior = 0
+    tiempo_actual = 0
+    while True:
+        tiempo_anterior = tiempo_actual
+        time.sleep(1800)
+        notificacion_auto()
+        tiempo_actual = datetime.now
+        logger.info(f"tiempo tarea actual actual: {tiempo_actual} --- tiempo ultima tarea: {tiempo_anterior}")
+
+           
 dp.add_handler(CommandHandler("start", bienvenida))
-dp.add_handler(CommandHandler("help", ayuda))
-dp.add_handler(CommandHandler("addm", agregar_mangas))
-dp.add_handler(CommandHandler("newm", nuevos_mangas))
+dp.add_handler(CommandHandler(["help", "h"], ayuda))
+dp.add_handler(CommandHandler(["agregar_mangas" ,"addm"], agregar_mangas))
+dp.add_handler(CommandHandler(["nuevos_mangas" ,"newm"], nuevos_mangas))
 
 
 if __name__ == "__main__":
     #jobs.run_repeating(notificacion_automatica,1800,10)
-    job_minute = jobs.run_repeating(notificacion_auto, interval=1800, first=10)
+    #job_minute = jobs.run_repeating(notificacion_auto, interval=60, first=10)
     logger.info("Tarea inciada... iniciando bot...")
+    t = threading.Thread(target=start_jobs)
+    t.start()
     run(updater)
+    

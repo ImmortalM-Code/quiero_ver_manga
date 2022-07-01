@@ -1,8 +1,7 @@
-from operator import ge
-import os
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, ForeignKey, Integer, String, Table, create_engine
+from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import relationship, sessionmaker
+import os
 
 
 
@@ -12,7 +11,7 @@ dbase = declarative_base()
 class Users(dbase):
     __tablename__ = "users"
     
-    chat_id = Column(Integer(), primary_key=True)
+    chat_id = Column(Integer(), primary_key=True, autoincrement=False)
 
     mangas = relationship('Mangas')
     
@@ -39,6 +38,19 @@ class Mangas(dbase):
         self.years = years
         self.state = state
         self.chat_id = chat_id
+
+
+class Genres(dbase):
+    __tablename__ = "genres"
+    
+    id = Column(Integer(), primary_key=True, autoincrement=True)
+    genre = Column(String(), nullable=False, unique=False)
+    
+    manga_genres = relationship("Mangas_genres")
+    
+    
+    def __init__(self, genre):
+        self.genre = genre
     
 
 class Mangas_genres(dbase):
@@ -56,21 +68,10 @@ class Mangas_genres(dbase):
     
 
 
-class Genres(dbase):
-    __tablename__ = "genres"
-    
-    id = Column(Integer(), primary_key=True, autoincrement=True)
-    genre = Column(Integer(), nullable=False, unique=True)
-    
-    manga_genres = relationship("Mangas_genres")
-    
-    
-    def __init__(self, genre):
-        self.genre = genre
-
-
 def iniciar_db():
-    engine = create_engine("sqlite:///regis.db")
+    DATABASE_URL = os.getenv("URL_DB")
+    #engine = create_engine("sqlite:///regis.db")
+    engine = create_engine(DATABASE_URL)
     Session = sessionmaker(engine)
     session = Session()
     dbase.metadata.create_all(engine)

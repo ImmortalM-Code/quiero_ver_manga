@@ -1,3 +1,4 @@
+import os
 import urllib.request
 import db_models.models as models
 import scraping.conectar as conectar
@@ -86,12 +87,17 @@ def mangas_auto(logger):
 
 
 def descargar_img(inx, datos, logger):
-    with open(f"img_tmp/{inx}.jpeg", "wb") as imagenfile:
-        try:
-            url = urllib.request.Request(datos["imagen"], headers=conectar.hdr)
-            logger.info(f"Descargando: img_tmp/{inx}.jpeg...")
-            imagenfile.write(urllib.request.urlopen(url).read())
-            logger.info(f"imagen img_tmp/{inx}.jpeg Descargada")
-        except ConnectionResetError as ex:
-            print(f"Error {ex} - {repr(ex)}")
+    try:
+        with open(f"img_tmp/{inx}.jpeg", "wb") as imagenfile:
+            try:
+                url = urllib.request.Request(datos["imagen"], headers=conectar.hdr)
+                logger.info(f"Descargando: img_tmp/{inx}.jpeg...")
+                imagenfile.write(urllib.request.urlopen(url).read())
+                logger.info(f"imagen img_tmp/{inx}.jpeg Descargada")
+            except ConnectionResetError as ex:
+                print(f"Error {ex} - {repr(ex)}")
+    
+    except FileNotFoundError as ex:
+            os.mkdir("img_tmp/")
+            descargar_img(inx, datos, logger)
 
