@@ -1,8 +1,8 @@
 FROM python:3.9
 
 RUN pip install --upgrade pip \
-    && mkdir /app
-RUN ls -a -l
+    && mkdir /app && mkdir /app/img_tmp
+RUN ls -a -l /app
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 RUN ~/.poetry/bin/poetry config virtualenvs.in-project true
 ADD . /app

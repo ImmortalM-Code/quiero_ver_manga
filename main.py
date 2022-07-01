@@ -3,10 +3,8 @@ from calendar import c
 import sys
 from turtle import up
 from telegram.ext import Updater, CommandHandler, CallbackContext
-import threading
 import time
 import datetime as dt
-import scheduler.trigger as trigger
 import telegram
 import controllers.consulta_datos as consulta_datos
 import mensajes as mj
@@ -109,6 +107,7 @@ def nuevos_mangas(update, context):
 
 
 def notificacion_auto(context: CallbackContext):
+    logger.info(f"Envio automatico de notificacion de mangas")
     registro = consulta_datos.mangas_auto(logger=logger)
     registro.reverse()
     
