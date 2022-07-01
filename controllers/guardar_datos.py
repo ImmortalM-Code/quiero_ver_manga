@@ -59,7 +59,4 @@ def guardar_manga(datos : dict, chat_id, session):
     
     session.close()
     
-    if len(verify_manga) != 0:
-        return True
-    else:
-        return False
+    return len(verify_manga) != 0

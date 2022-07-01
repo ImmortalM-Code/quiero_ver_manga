@@ -2,11 +2,13 @@ FROM python:3.9
 
 RUN pip install --upgrade pip \
     && mkdir /app
-
+RUN ls -a -l
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+RUN ~/.poetry/bin/poetry config virtualenvs.in-project true
 ADD . /app
-RUN cd app && ~/.poetry/bin/poetry install
+
 
 WORKDIR /app
+RUN ~/.poetry/bin/poetry install
 
-CMD .venv/bin/python /app/main.py
+CMD .venv/bin/python main.py

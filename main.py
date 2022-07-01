@@ -44,8 +44,8 @@ elif mode == "prod":
         PORT = int(os.environ.get("PORT", "8443"))
         HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
         
-        updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN)
-        updater.bot.set_webhook(f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
+        updater.start_webhook(listen="0.0.0.0", port=PORT, url_path=TOKEN,
+                              webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
         logger.info("Bot iniciado")
 else:
     logger.info("MODO no expecificado")
@@ -140,6 +140,6 @@ dp.add_handler(CommandHandler("newm", nuevos_mangas))
 
 if __name__ == "__main__":
     #jobs.run_repeating(notificacion_automatica,1800,10)
-    job_minute = jobs.run_repeating(notificacion_auto, interval=600, first=10)
+    job_minute = jobs.run_repeating(notificacion_auto, interval=1800, first=10)
     logger.info("Tarea inciada... iniciando bot...")
     run(updater)
